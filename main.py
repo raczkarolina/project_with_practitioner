@@ -50,10 +50,19 @@ explodes = (0, 0.3)
 size = data.PM10_Al_Krasińskiego.isna().value_counts()
 
 PM10_Al_Krasińskiego_data = data[['data', 'godzina', 'temperatura_powietrza', 'PM10_Al_Krasińskiego']]
-# PM10_Al_Krasińskiego_data['PM10_Al_Krasińskiego']=PM10_Al_Krasińskiego_data.PM10_Al_Krasińskiego.fillna(method='bfill')
+# print(PM10_Al_Krasińskiego_data[PM10_Al_Krasińskiego_data.isna().any(axis=1)])
 
 
-PM10_Al_Krasińskiego_data.data = pd.to_datetime(PM10_Al_Krasińskiego_data.data)
+PM10_Al_Krasińskiego_data.temperatura_powietrza=PM10_Al_Krasińskiego_data.temperatura_powietrza.fillna(method='bfill')
+PM10_Al_Krasińskiego_data.PM10_Al_Krasińskiego=PM10_Al_Krasińskiego_data.PM10_Al_Krasińskiego.fillna(method='bfill')
+
+PM10_Al_Krasińskiego_data.godzina=PM10_Al_Krasińskiego_data.godzina.fillna('0:00:00')
+PM10_Al_Krasińskiego_data.data=PM10_Al_Krasińskiego_data.data.fillna(method='ffill')
+
+# print(PM10_Al_Krasińskiego_data.head())
+
+PM10_Al_Krasińskiego_data['data'] = pd.to_datetime(PM10_Al_Krasińskiego_data.data)
+# print(PM10_Al_Krasińskiego_data['data'])
 
 YEAR = []
 MONTH = []
@@ -65,16 +74,17 @@ for i in range(len(PM10_Al_Krasińskiego_data)):
     MONTH.append(PM10_Al_Krasińskiego_data.data[i].month)
     YEAR.append(PM10_Al_Krasińskiego_data.data[i].year)
 
-# PM10_Al_Krasińskiego_data['Year'] = YEAR
-# PM10_Al_Krasińskiego_data['Month'] = MONTH
-# PM10_Al_Krasińskiego_data['Day'] = DAY
-# PM10_Al_Krasińskiego_data['Weekday'] = WEEKDAY
-# change_year_index = []
-# change_year = []
-# year_list = PM10_Al_Krasińskiego_data['Year'].tolist()
-# for y in range(0,len(year_list)-1):
-#     if year_list[y]!=year_list[y+1]:
-#         change_year.append(year_list[y+1])
-#         change_year_index.append(y+1)
-#
-# print(PM10_Al_Krasińskiego_data.loc[change_year_index].head())
+PM10_Al_Krasińskiego_data['Year'] = YEAR
+PM10_Al_Krasińskiego_data['Month'] = MONTH
+PM10_Al_Krasińskiego_data['Day'] = DAY
+PM10_Al_Krasińskiego_data['Weekday'] = WEEKDAY
+
+change_year_index = []
+change_year = []
+year_list = PM10_Al_Krasińskiego_data['Year'].tolist()
+for y in range(0,len(year_list)-1):
+    if year_list[y]!=year_list[y+1]:
+        change_year.append(year_list[y+1])
+        change_year_index.append(y+1)
+
+print(PM10_Al_Krasińskiego_data.loc[change_year_index].head())
